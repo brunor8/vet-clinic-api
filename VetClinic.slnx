@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/VetClinic.Api/VetClinic.Api.csproj" />
+    <Project Path="src/VetClinic.Application/VetClinic.Application.csproj" />
+    <Project Path="src/VetClinic.Domain/VetClinic.Domain.csproj" />
+    <Project Path="src/VetClinic.Infrastructure/VetClinic.Infrastructure.csproj" />
+  </Folder>
+</Solution>
