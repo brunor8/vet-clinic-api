@@ -1,6 +1,46 @@
-@VetClinic.Api_HostAddress = http://localhost:5024
+@host = http://localhost:5024
 
-GET {{VetClinic.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Sucesso → 201
+POST {{host}}/api/customers
+Content-Type: application/json
 
-###
+{
+  "name": "Ana Silva",
+  "cpf": "529.982.247-25",
+  "email": "ana@example.com",
+  "phone": "(11) 99999-9999"
+}
+
+### 2. Duplicado (rode o 1 antes) → 409
+POST {{host}}/api/customers
+Content-Type: application/json
+
+{
+  "name": "Ana Silva",
+  "cpf": "52998224725",
+  "email": "ANA@example.com",
+  "phone": "11999999999"
+}
+
+### 3. Todos os campos inválidos → 400 com 4 erros
+POST {{host}}/api/customers
+Content-Type: application/json
+
+{
+  "name": "",
+  "cpf": "111.111.111-11",
+  "email": "ana@",
+  "phone": "123"
+}
+
+### 4. Campos ausentes → 400
+POST {{host}}/api/customers
+Content-Type: application/json
+
+{}
+
+### 5. JSON malformado → 400
+POST {{host}}/api/customers
+Content-Type: application/json
+
+{ "name": "Ana"

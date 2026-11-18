@@ -5,13 +5,13 @@ namespace VetClinic.Infrastructure.Persistence;
 
 public sealed class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
-    private const string LocalDevelopment =
-        "Host=localhost;Port=5432;Database=vetclinic;Username=VetClinicAdmin;Password=VetClinicPwd";
+    private const string ConnectionVariable = "VETCLINIC_CONNECTION";
 
     public AppDbContext CreateDbContext(string[] args)
     {
-        var connectionString =
-            Environment.GetEnvironmentVariable("VETCLINIC_CONNECTION") ?? LocalDevelopment;
+        var connectionString = Environment.GetEnvironmentVariable(ConnectionVariable)
+            ?? throw new InvalidOperationException(
+                $"Defina a variável de ambiente {ConnectionVariable} para usar o dotnet ef.");
 
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseNpgsql(connectionString)
