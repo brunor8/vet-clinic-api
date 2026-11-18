@@ -6,6 +6,7 @@
     <Project Path="src/VetClinic.Infrastructure/VetClinic.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/VetClinic.Application.UnitTests/VetClinic.Application.UnitTests.csproj" />
     <Project Path="tests/VetClinic.Domain.UnitTests/VetClinic.Domain.UnitTests.csproj" />
   </Folder>
 </Solution>
