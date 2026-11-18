@@ -1,7 +1,8 @@
 using VetClinic.Application.Common.Results;
 using VetClinic.Application.Customers.RegisterCustomer;
 using VetClinic.Application.UnitTests.Fakes;
-using VetClinic.Domain.Customers;
+using VetClinic.Application.Common.Abstractions;
+using VetClinic.Application.Customers;
 
 namespace VetClinic.Application.UnitTests.Customers;
 
@@ -124,5 +125,28 @@ public class RegisterCustomerHandlerTests
         var result = Result<Guid>.Failure(Error.Validation("x", "erro"));
 
         Assert.Throws<InvalidOperationException>(() => result.Value);
+    }
+
+    [Theory]
+    [InlineData(CustomerConstraints.Cpf, "customer.cpf_already_registered")]
+    [InlineData(CustomerConstraints.Email, "customer.email_already_registered")]
+    public async Task Handle_WhenUniqueConstraintFailsOnSave_ShouldReturnConflict(string constraint, string expectedCode)
+    {
+        _unitOfWork.ExceptionToThrow = new UniqueConstraintViolationException(constraint);
+
+        var result = await _handler.Handle(ValidCommand(), CancellationToken.None);
+
+        var error = Assert.Single(result.Errors);
+        Assert.Equal(expectedCode, error.Code);
+        Assert.Equal(ErrorType.Conflict, error.Type);
+    }
+
+    [Fact]
+    public async Task Handle_WhenUnknownConstraintFailsOnSave_ShouldRethrow()
+    {
+        _unitOfWork.ExceptionToThrow = new UniqueConstraintViolationException("ix_outro");
+
+        await Assert.ThrowsAsync<UniqueConstraintViolationException>(() =>
+            _handler.Handle(ValidCommand(), CancellationToken.None));
     }
 }
